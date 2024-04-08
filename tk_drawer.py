@@ -16,6 +16,10 @@ def y(p):
     return SIZE / 2 - SCALE * p.y
 
 
+def rad(r):
+    return SCALE * r
+
+
 class TkDrawer:
     """ Графический интерфейс для выпуклой оболочки """
 
@@ -23,7 +27,7 @@ class TkDrawer:
     def __init__(self):
         self.root = Tk()
         self.root.title("Выпуклая оболочка")
-        self.root.geometry(f"{SIZE+5}x{SIZE+5}")
+        self.root.geometry(f"{SIZE + 5}x{SIZE + 5}")
         self.root.resizable(False, False)
         self.root.bind('<Control-c>', quit)
         self.canvas = Canvas(self.root, width=SIZE, height=SIZE)
@@ -40,6 +44,11 @@ class TkDrawer:
         self.canvas.create_line(SIZE / 2, 0, SIZE / 2, SIZE, fill="blue")
         self.root.update()
 
+    # Рисование круга
+    def draw_circle(self, p, r):
+        self.canvas.create_oval(x(p) - rad(r), y(p) - rad(r), x(p) + rad(r), y(p) + rad(r), outline="black", width=2)
+        self.root.update()
+
     # Рисование точки
     def draw_point(self, p):
         self.canvas.create_oval(
@@ -53,9 +62,9 @@ class TkDrawer:
 
 
 if __name__ == "__main__":
-
     import time
     from r2point import R2Point
+
     tk = TkDrawer()
     tk.clean()
     tk.draw_point(R2Point(2.0, 2.0))

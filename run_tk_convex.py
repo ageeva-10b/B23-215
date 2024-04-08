@@ -1,7 +1,7 @@
 #!/usr/bin/env -S python3 -B
 from tk_drawer import TkDrawer
 from r2point import R2Point
-from convex import Void, Point, Segment, Polygon
+from convex import Void, Point, Segment, Polygon, Figure
 
 
 def void_draw(self, tk):
@@ -10,6 +10,10 @@ def void_draw(self, tk):
 
 def point_draw(self, tk):
     tk.draw_point(self.p)
+
+
+def circle_draw(self, tk):
+    tk.draw_circle(self.x_c, self.y_c, self.r)
 
 
 def segment_draw(self, tk):
@@ -27,17 +31,21 @@ setattr(Point, 'draw', point_draw)
 setattr(Segment, 'draw', segment_draw)
 setattr(Polygon, 'draw', polygon_draw)
 
-
 tk = TkDrawer()
 f = Void()
+Figure.cen = R2Point()
+Figure.rad = float(input("r -> "))
+
 tk.clean()
 
 try:
+
     while True:
         f = f.add(R2Point())
         tk.clean()
         f.draw(tk)
-        print(f"S = {f.area()}, P = {f.perimeter()}\n")
+        tk.draw_circle(Figure.cen, Figure.rad)
+        print(f"S = {f.area()}, P = {f.perimeter()}, S_per = {f.area_of_intersection()}\n")
 except (EOFError, KeyboardInterrupt):
     print("\nStop")
     tk.close()

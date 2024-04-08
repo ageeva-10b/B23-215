@@ -4,11 +4,17 @@ from r2point import R2Point
 
 class Figure:
     """ Абстрактная фигура """
+    cen=R2Point(0, 0)
+    rad=0
+
 
     def perimeter(self):
         return 0.0
 
     def area(self):
+        return 0.0
+
+    def area_of_intersection(self):
         return 0.0
 
 
@@ -63,12 +69,16 @@ class Polygon(Figure):
             self.points.push_first(c)
         self._perimeter = a.dist(b) + b.dist(c) + c.dist(a)
         self._area = abs(R2Point.area(a, b, c))
+        self._area_of_intersection=abs(R2Point.area_of_intersection(a, b, c, self.cen, self.rad))
 
     def perimeter(self):
         return self._perimeter
 
     def area(self):
         return self._area
+
+    def area_of_intersection(self):
+        return self._area_of_intersection
 
     # добавление новой точки
     def add(self, t):
@@ -87,12 +97,16 @@ class Polygon(Figure):
             self._area += abs(R2Point.area(t,
                                            self.points.last(),
                                            self.points.first()))
+            self._area_of_intersection += abs(R2Point.area_of_intersection(t,
+                                           self.points.last(),
+                                           self.points.first(),self.cen,self.rad))
 
             # удаление освещённых рёбер из начала дека
             p = self.points.pop_first()
             while t.is_light(p, self.points.first()):
                 self._perimeter -= p.dist(self.points.first())
                 self._area += abs(R2Point.area(t, p, self.points.first()))
+                self._area_of_intersection+= abs(R2Point.area_of_intersection(t, p, self.points.first(),self.cen,self.rad))
                 p = self.points.pop_first()
             self.points.push_first(p)
 
@@ -101,6 +115,7 @@ class Polygon(Figure):
             while t.is_light(self.points.last(), p):
                 self._perimeter -= p.dist(self.points.last())
                 self._area += abs(R2Point.area(t, p, self.points.last()))
+                self._area_of_intersection += abs(R2Point.area_of_intersection(t, p, self.points.last(),self.cen,self.rad))
                 p = self.points.pop_last()
             self.points.push_last(p)
 
